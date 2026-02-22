@@ -19,66 +19,15 @@
 
         /* Header section */
         .tool-header { margin-bottom: 28px; border-bottom: 2px solid #e5e5e5; padding-bottom: 20px; }
-        .editable-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #111;
-            border: none;
-            outline: none;
-            width: 100%;
-            background: transparent;
-            margin: 0 0 10px 0;
-            padding: 4px 6px;
-            border-radius: 4px;
-            line-height: 1.2;
-        }
-        .editable-title:hover, .editable-title:focus {
-            background: #f0f7ff;
-            box-shadow: 0 0 0 2px #b3d4f5;
-        }
-        .editable-desc {
-            font-size: 0.97rem;
-            color: #444;
-            border: none;
-            outline: none;
-            width: 100%;
-            background: transparent;
-            resize: none;
-            padding: 4px 6px;
-            border-radius: 4px;
-            line-height: 1.6;
-            font-family: inherit;
-            min-height: 60px;
-        }
-        .editable-desc:hover, .editable-desc:focus {
-            background: #f0f7ff;
-            box-shadow: 0 0 0 2px #b3d4f5;
-        }
-        .edit-hint {
-            font-size: 0.75rem;
-            color: #aaa;
-            margin-top: 6px;
-            font-style: italic;
-        }
+        .tool-header h1 { font-size: 1.8rem; font-weight: 700; color: #111; margin: 0 0 10px 0; }
+        .tool-header p { font-size: 0.97rem; color: #444; line-height: 1.6; margin: 0; }
     </style>
 </head>
 <body>
 
-
     <div class="tool-header">
-        <input
-            class="editable-title"
-            type="text"
-            value="Tool 1 -- Vehicle Emission Calculator"
-            placeholder="Enter tool title..."
-            aria-label="Tool title"
-        />
-        <textarea
-            class="editable-desc"
-            placeholder="Enter a description of what this tool does..."
-            aria-label="Tool description"
-        >Use the sliders below to set the number of cars and trucks passing through a given area per hour. This tool allows the user to set a number of cars passing by on the highway and see the amount of pollutants that result. The four pollutants tracked are CO, VOCs, NOx, and PM. Users can see the mass produced of each of these pollutants by the cars passing by per hour. The rates at which these pollutants are produced are calculated from the flowchart attached and are in per-mile values (assumed speed of cars is 60 mph). These values can be applied to the mile section of highway that this airshed is looking at along I-75 in Dallas, Texas..</textarea>
-        <div class="edit-hint">Click the title or description to edit</div>
+        <h1>Tool 1 -- Vehicle Emissions Calculator</h1>
+        <p>Use the sliders below to set the number of cars and trucks passing through a given area per hour. This tool allows the user to set a number of cars passing by on the highway and see the amount of pollutants that result. The four pollutant outputs tracked are CO, VOCs, NOx, and PM, users can see the mass produced of each of these pollutants by the cars passing by per hour. The rates at which these pollutants are produced is calculated from the flowchart attached and are in per mile values (assumed speed of cars is 60 mph). These values can be applied to the mile section of highway this airshed is looking at along I-75 in Dallas, Texas.</p>
     </div>
 
     <h2>Cars per Hour</h2>
@@ -131,13 +80,6 @@
         const truckRateLabel = document.getElementById('truckRateLabel');
         const carTable = document.getElementById('carPollutants');
         const truckTable = document.getElementById('truckPollutants');
-
-        // Auto-resize textarea
-        const descEl = document.querySelector('.editable-desc');
-        descEl.addEventListener('input', () => {
-            descEl.style.height = 'auto';
-            descEl.style.height = descEl.scrollHeight + 'px';
-        });
 
         function updateTable(tableEl, vehiclesPerHour) {
             tableEl.querySelectorAll('tbody tr').forEach(row => {
