@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -17,9 +16,70 @@
         th:first-child, td:first-child { text-align:left; }
         th { background:#f6f6f6; font-weight:600; }
         caption { caption-side:top; font-weight:700; text-align:left; padding-bottom:8px; }
+
+        /* Header section */
+        .tool-header { margin-bottom: 28px; border-bottom: 2px solid #e5e5e5; padding-bottom: 20px; }
+        .editable-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #111;
+            border: none;
+            outline: none;
+            width: 100%;
+            background: transparent;
+            margin: 0 0 10px 0;
+            padding: 4px 6px;
+            border-radius: 4px;
+            line-height: 1.2;
+        }
+        .editable-title:hover, .editable-title:focus {
+            background: #f0f7ff;
+            box-shadow: 0 0 0 2px #b3d4f5;
+        }
+        .editable-desc {
+            font-size: 0.97rem;
+            color: #444;
+            border: none;
+            outline: none;
+            width: 100%;
+            background: transparent;
+            resize: none;
+            padding: 4px 6px;
+            border-radius: 4px;
+            line-height: 1.6;
+            font-family: inherit;
+            min-height: 60px;
+        }
+        .editable-desc:hover, .editable-desc:focus {
+            background: #f0f7ff;
+            box-shadow: 0 0 0 2px #b3d4f5;
+        }
+        .edit-hint {
+            font-size: 0.75rem;
+            color: #aaa;
+            margin-top: 6px;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
+
+
+    <div class="tool-header">
+        <input
+            class="editable-title"
+            type="text"
+            value="Tool 1 -- Vehicle Emission Calculator"
+            placeholder="Enter tool title..."
+            aria-label="Tool title"
+        />
+        <textarea
+            class="editable-desc"
+            placeholder="Enter a description of what this tool does..."
+            aria-label="Tool description"
+        >Use the sliders below to set the number of cars and trucks passing through a given area per hour. This tool allows the user to set a number of cars passing by on the highway and see the amount of pollutants that result. The four pollutants tracked are CO, VOCs, NOx, and PM. Users can see the mass produced of each of these pollutants by the cars passing by per hour. The rates at which these pollutants are produced are calculated from the flowchart attached and are in per-mile values (assumed speed of cars is 60 mph). These values can be applied to the mile section of highway that this airshed is looking at along I-75 in Dallas, Texas..</textarea>
+        <div class="edit-hint">Click the title or description to edit</div>
+    </div>
 
     <h2>Cars per Hour</h2>
     <div class="row">
@@ -62,57 +122,50 @@
     </div>
 
     <script>
-        // initial rates
         let carsPerHour = Number(document.getElementById('carRate').value);
         let trucksPerHour = Number(document.getElementById('truckRate').value);
 
         const carRateEl = document.getElementById('carRate');
         const carRateLabel = document.getElementById('carRateLabel');
-
         const truckRateEl = document.getElementById('truckRate');
         const truckRateLabel = document.getElementById('truckRateLabel');
-
         const carTable = document.getElementById('carPollutants');
         const truckTable = document.getElementById('truckPollutants');
 
-        function updateLabel(el, labelEl, value) {
-            labelEl.textContent = `${value} /h`;
-        }
+        // Auto-resize textarea
+        const descEl = document.querySelector('.editable-desc');
+        descEl.addEventListener('input', () => {
+            descEl.style.height = 'auto';
+            descEl.style.height = descEl.scrollHeight + 'px';
+        });
 
         function updateTable(tableEl, vehiclesPerHour) {
-            const rows = tableEl.querySelectorAll('tbody tr');
-            rows.forEach(row => {
+            tableEl.querySelectorAll('tbody tr').forEach(row => {
                 const factor = Number(row.querySelector('.factor').textContent);
                 const gph = factor * vehiclesPerHour;
-                const kgph = gph / 1000;
                 row.querySelector('.gph').textContent = gph.toFixed(2);
-                row.querySelector('.kgph').textContent = kgph.toFixed(3);
+                row.querySelector('.kgph').textContent = (gph / 1000).toFixed(3);
             });
         }
 
         function onCarInput() {
             carsPerHour = Number(carRateEl.value);
-            updateLabel(carRateEl, carRateLabel, carsPerHour);
+            carRateLabel.textContent = `${carsPerHour} /h`;
             updateTable(carTable, carsPerHour);
-            console.log('Cars per hour:', carsPerHour);
         }
 
         function onTruckInput() {
             trucksPerHour = Number(truckRateEl.value);
-            updateLabel(truckRateEl, truckRateLabel, trucksPerHour);
+            truckRateLabel.textContent = `${trucksPerHour} /h`;
             updateTable(truckTable, trucksPerHour);
-            console.log('Trucks per hour:', trucksPerHour);
         }
 
         carRateEl.addEventListener('input', onCarInput);
         truckRateEl.addEventListener('input', onTruckInput);
 
-        // initialize displays
         onCarInput();
         onTruckInput();
     </script>
 
 </body>
 </html>
-
-
