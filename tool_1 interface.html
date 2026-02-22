@@ -1,0 +1,118 @@
+html
+
+// ...existing code...
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Vehicles per Hour Slider</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <style>
+        body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial; padding: 24px; max-width: 960px; margin: auto; }
+        .row { display:flex; gap:12px; align-items:center; }
+        .slider { flex:1; }
+        .stat { font-weight:600; min-width:100px; text-align:center; }
+        h2 { margin-top: 24px; margin-bottom: 8px; }
+        .tables { display:flex; gap:24px; margin-top:16px; flex-wrap:wrap; }
+        table { border-collapse:collapse; width:100%; max-width:440px; }
+        th, td { border:1px solid #ddd; padding:8px; text-align:right; }
+        th:first-child, td:first-child { text-align:left; }
+        th { background:#f6f6f6; font-weight:600; }
+        caption { caption-side:top; font-weight:700; text-align:left; padding-bottom:8px; }
+    </style>
+</head>
+<body>
+
+    <h2>Cars per Hour</h2>
+    <div class="row">
+        <input id="carRate" class="slider" type="range" min="0" max="1250" value="120" />
+        <div id="carRateLabel" class="stat">120 /h</div>
+    </div>
+
+    <h2>Trucks per Hour</h2>
+    <div class="row">
+        <input id="truckRate" class="slider" type="range" min="0" max="250" value="120" />
+        <div id="truckRateLabel" class="stat">120 /h</div>
+    </div>
+
+    <div class="tables">
+        <table id="carPollutants">
+            <caption>Car pollutants in Airshed</caption>
+            <thead>
+                <tr><th>Pollutant</th><th>g/vehicle</th><th>g/hour</th><th>kg/hour</th></tr>
+            </thead>
+            <tbody>
+                <tr data-poll="CO"><td>CO</td><td class="factor">3.13</td><td class="gph">0</td><td class="kgph">0.000</td></tr>
+                <tr data-poll="NOx"><td>NOx</td><td class="factor">0.07</td><td class="gph">0</td><td class="kgph">0.000</td></tr>
+                <tr data-poll="PM"><td>PM</td><td class="factor">0.00009</td><td class="gph">0</td><td class="kgph">0.000</td></tr>
+                <tr data-poll="VOC"><td>VOC</td><td class="factor">0.003</td><td class="gph">0</td><td class="kgph">0.000</td></tr>
+            </tbody>
+        </table>
+
+        <table id="truckPollutants">
+            <caption>Truck pollutants in Airshed</caption>
+            <thead>
+                <tr><th>Pollutant</th><th>g/vehicle</th><th>g/hour</th><th>kg/hour</th></tr>
+            </thead>
+            <tbody>
+                <tr data-poll="CO"><td>CO</td><td class="factor">41.7</td><td class="gph">0</td><td class="kgph">0.000</td></tr>
+                <tr data-poll="NOx"><td>NOx</td><td class="factor">9.33</td><td class="gph">0</td><td class="kgph">0.000</td></tr>
+                <tr data-poll="PM"><td>PM</td><td class="factor">0.0012</td><td class="gph">0</td><td class="kgph">0.000</td></tr>
+                <tr data-poll="VOC"><td>VOC</td><td class="factor">0.04</td><td class="gph">0</td><td class="kgph">0.000</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // initial rates
+        let carsPerHour = Number(document.getElementById('carRate').value);
+        let trucksPerHour = Number(document.getElementById('truckRate').value);
+
+        const carRateEl = document.getElementById('carRate');
+        const carRateLabel = document.getElementById('carRateLabel');
+
+        const truckRateEl = document.getElementById('truckRate');
+        const truckRateLabel = document.getElementById('truckRateLabel');
+
+        const carTable = document.getElementById('carPollutants');
+        const truckTable = document.getElementById('truckPollutants');
+
+        function updateLabel(el, labelEl, value) {
+            labelEl.textContent = `${value} /h`;
+        }
+
+        function updateTable(tableEl, vehiclesPerHour) {
+            const rows = tableEl.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                const factor = Number(row.querySelector('.factor').textContent);
+                const gph = factor * vehiclesPerHour;
+                const kgph = gph / 1000;
+                row.querySelector('.gph').textContent = gph.toFixed(2);
+                row.querySelector('.kgph').textContent = kgph.toFixed(3);
+            });
+        }
+
+        function onCarInput() {
+            carsPerHour = Number(carRateEl.value);
+            updateLabel(carRateEl, carRateLabel, carsPerHour);
+            updateTable(carTable, carsPerHour);
+            console.log('Cars per hour:', carsPerHour);
+        }
+
+        function onTruckInput() {
+            trucksPerHour = Number(truckRateEl.value);
+            updateLabel(truckRateEl, truckRateLabel, trucksPerHour);
+            updateTable(truckTable, trucksPerHour);
+            console.log('Trucks per hour:', trucksPerHour);
+        }
+
+        carRateEl.addEventListener('input', onCarInput);
+        truckRateEl.addEventListener('input', onTruckInput);
+
+        // initialize displays
+        onCarInput();
+        onTruckInput();
+    </script>
+
+</body>
+</html>
